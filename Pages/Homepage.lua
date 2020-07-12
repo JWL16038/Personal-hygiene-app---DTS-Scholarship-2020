@@ -17,17 +17,21 @@ display.setDefault("background",1,1,1)
  
  
 local function trackProgress()
+	composer.gotoScene("Pages.recordProgress",{effect="slideLeft"})
 
 end
 
 local function recordProgress()
-
+	composer.gotoScene("Pages.recordProgress.menu",{effect="slideLeft"})
 end
 
 local function selfDiagnosis()
+	composer.gotoScene("Pages.selfDiagnosis.menu",{effect="slideLeft"})
+
 end
 
 local function gotoSettings()
+	composer.gotoScene("Pages.settingsmenu",{effect="slideLeft"})
 end
  
 -- -----------------------------------------------------------------------------------
@@ -57,6 +61,7 @@ function scene:show( event )
 local trackButton = widget.newButton(
     {
         label = "Track my progress",
+		labelColor = { default={ 0, 0, 0 }},
         onEvent = trackProgress,
         shape = "roundedRect",
         width = 160,
@@ -73,7 +78,8 @@ sceneGroup:insert(trackButton)
 local recordButton = widget.newButton(
     {
         label = "Record my progress",
-        onEvent = recordProgress,
+ 		labelColor = { default={ 0, 0, 0 }},
+       onEvent = recordProgress,
         shape = "roundedRect",
         width = 160,
         height = 40,
@@ -89,7 +95,8 @@ sceneGroup:insert(recordButton)
 local selfdiagnosisButton = widget.newButton(
     {
         label = "COVID-19 Self diagnosis",
-        onEvent = selfDiagnosis,
+  		labelColor = { default={ 0, 0, 0 }},
+		onEvent = selfDiagnosis,
         shape = "roundedRect",
         width = 200,
         height = 40,
@@ -105,6 +112,7 @@ sceneGroup:insert(selfdiagnosisButton)
 local settingsButton = widget.newButton(
     {
         label = "Settings",
+		labelColor = { default={ 0, 0, 0 }},
         onEvent = gotoSettings,
         shape = "roundedRect",
         width = 200,

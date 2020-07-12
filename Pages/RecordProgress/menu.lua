@@ -1,13 +1,12 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local widget = require("widget")
+ 
 
 local ScreenWidth = display.contentWidth
 local ScreenHeight = display.contentHeight
 local CentreX = display.contentCenterX
 local CentreY = display.contentCenterY 
-
-local globalvar = require("globalvar")
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
@@ -17,15 +16,23 @@ local globalvar = require("globalvar")
 display.setDefault("background",1,1,1)
  
  
-local function agree(event)
-	composer.gotoScene( "Pages.Homepage",{effect="slideLeft"})
-	globalvar.showTabbar = 1
+local function trackProgress()
+	composer.gotoScene("Pages.recordProgress",{effect="slideLeft"})
+
 end
 
-local function disagree()
-	os.exit()
+local function recordProgress()
+	composer.gotoScene("Pages.recordProgress.menu",{effect="slideLeft"})
 end
- 
+
+local function selfDiagnosis()
+	composer.gotoScene("Pages.selfDiagnosis.menu",{effect="slideLeft"})
+
+end
+
+local function gotoSettings()
+	composer.gotoScene("Pages.settingsmenu",{effect="slideLeft"})
+end
  
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -48,57 +55,76 @@ function scene:show( event )
  
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
-		 
-		 
-		 local options = 
-		{
-			text = "This app is to be used for educational purposes only.\n\nFor other issues, please see your local doctor or your local COVID-19 testing site.",     
-			x = CentreX + 10,
-			y = CentreY,
-			width = ScreenWidth,
-			font = native.systemFont,   
-			fontSize = 26,
-			align = "left"  -- Alignment parameter
-		}
-		 
-		local mainText = display.newText( options )
-		mainText:setFillColor( 0, 0, 0 )
-		sceneGroup:insert(mainText)
+ 
+ 	
 		
-		
-		
-		
-local agreeButton = widget.newButton(
+local trackButton = widget.newButton(
     {
-        label = "Agree",
-        onEvent = agree,
+        label = "Handing washing",
+		labelColor = { default={ 0, 0, 0 }},
+        onEvent = trackProgress,
         shape = "roundedRect",
-        width = 120,
+        width = 160,
         height = 40,
         cornerRadius = 2,
-        fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
+        fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
         strokeWidth = 4,
-		x = CentreX/2,
-		y = CentreY*2,
+		x = CentreX,
+		y = CentreY/2,
     }
 )
-sceneGroup:insert(agreeButton)
+sceneGroup:insert(trackButton)
+		
+local recordButton = widget.newButton(
+    {
+        label = "Coughing etiquette",
+ 		labelColor = { default={ 0, 0, 0 }},
+       onEvent = recordProgress,
+        shape = "roundedRect",
+        width = 160,
+        height = 40,
+        cornerRadius = 2,
+        fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
+        strokeWidth = 4,
+		x = CentreX,
+		y = CentreY/1.15,
+    }
+)
+sceneGroup:insert(recordButton)
 
-local disagreeButton = widget.newButton(
+local selfdiagnosisButton = widget.newButton(
     {
-        label = "Disagree",
-        onEvent = disagree,
+        label = "Wearing a face mask",
+  		labelColor = { default={ 0, 0, 0 }},
+		onEvent = selfDiagnosis,
         shape = "roundedRect",
-        width = 120,
+        width = 200,
         height = 40,
         cornerRadius = 2,
-        fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} },
+        fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
         strokeWidth = 4,
-		x = CentreX*1.5,
-		y = CentreY*2,
+		x = CentreX,
+		y = CentreY/0.8,
     }
 )
-sceneGroup:insert(disagreeButton)
+sceneGroup:insert(selfdiagnosisButton)
+
+local settingsButton = widget.newButton(
+    {
+        label = "Self isolation",
+		labelColor = { default={ 0, 0, 0 }},
+        onEvent = gotoSettings,
+        shape = "roundedRect",
+        width = 200,
+        height = 40,
+        cornerRadius = 2,
+        fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
+        strokeWidth = 4,
+		x = CentreX,
+		y = CentreY * 1.7,
+    }
+)
+sceneGroup:insert(settingsButton)
 
  
     elseif ( phase == "did" ) then
