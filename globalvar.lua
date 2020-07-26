@@ -1,3 +1,3 @@
-local showTabbar = {}
+local titleTextstring = {}
 
-return showTabbar
+return titleTextstring

@@ -16,17 +16,17 @@ local CentreY = display.contentCenterY
 display.setDefault("background",1,1,1)
  
  
-local function trackProgress()
-	composer.gotoScene("Pages.recordProgress",{effect="slideLeft"})
+local function gotoHandwash()
+	composer.gotoScene("Pages.RecordProgress.Handwashing.handwash_start",{effect="slideLeft"})
 
 end
 
-local function recordProgress()
-	composer.gotoScene("Pages.recordProgress.menu",{effect="slideLeft"})
+local function gotoCoughingEtiquette()
+	composer.gotoScene("Pages.RecordProgress.CoughingEtiquette.coughingetiquette_start",{effect="slideLeft"})
 end
 
-local function selfDiagnosis()
-	composer.gotoScene("Pages.selfDiagnosis.menu",{effect="slideLeft"})
+local function gotoFacemask()
+	composer.gotoScene("Pages.RecordProgress.Facemask.facemask_start",{effect="slideLeft"})
 
 end
 
@@ -56,13 +56,19 @@ function scene:show( event )
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
  
- 	
+	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
+	titleBar:setFillColor( 0,0.62,0.451,1 )
+	sceneGroup:insert(titleBar)
+	
+	local titleText = display.newText( "Record my progress", CentreX, 10,  native.systemFont, 26 )
+	titleText:setFillColor( 0, 0, 0 )
+	sceneGroup:insert(titleText)
 		
 local trackButton = widget.newButton(
     {
         label = "Handing washing",
 		labelColor = { default={ 0, 0, 0 }},
-        onEvent = trackProgress,
+        onEvent = gotoHandwash,
         shape = "roundedRect",
         width = 160,
         height = 40,
@@ -79,7 +85,7 @@ local recordButton = widget.newButton(
     {
         label = "Coughing etiquette",
  		labelColor = { default={ 0, 0, 0 }},
-       onEvent = recordProgress,
+       onEvent = gotoCoughingEtiquette,
         shape = "roundedRect",
         width = 160,
         height = 40,
@@ -96,7 +102,7 @@ local selfdiagnosisButton = widget.newButton(
     {
         label = "Wearing a face mask",
   		labelColor = { default={ 0, 0, 0 }},
-		onEvent = selfDiagnosis,
+		onEvent = gotoFacemask,
         shape = "roundedRect",
         width = 200,
         height = 40,

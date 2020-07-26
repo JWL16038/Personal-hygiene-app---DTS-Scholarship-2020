@@ -7,7 +7,6 @@ local ScreenHeight = display.contentHeight
 local CentreX = display.contentCenterX
 local CentreY = display.contentCenterY 
 
-local globalvar = require("globalvar")
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
@@ -19,7 +18,6 @@ display.setDefault("background",1,1,1)
  
 local function agree(event)
 	composer.gotoScene( "Pages.Homepage",{effect="slideLeft"})
-	globalvar.showTabbar = 1
 end
 
 local function disagree()
@@ -36,7 +34,8 @@ function scene:create( event )
  
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
- 
+	
+
 end
  
  
@@ -48,11 +47,20 @@ function scene:show( event )
  
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
-		 
-		 
+
+		local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
+		titleBar:setFillColor( 0,0.62,0.451,1 )
+		sceneGroup:insert(titleBar)			
+		local titleText = display.newText( "Disclaimer", CentreX, 10,  native.systemFont, 26 )
+		titleText:setFillColor( 0, 0, 0 )
+		sceneGroup:insert(titleText)		
+
+	 
+
+				 
 		 local options = 
 		{
-			text = "This app is to be used for educational purposes only.\n\nFor other issues, please see your local doctor or your local COVID-19 testing site.",     
+			text = "This app is to be used for educational purposes only.\n\nPlease always consult your doctor for any health related issue.",     
 			x = CentreX + 10,
 			y = CentreY,
 			width = ScreenWidth,
@@ -103,7 +111,7 @@ sceneGroup:insert(disagreeButton)
  
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
- 
+
     end
 end
  

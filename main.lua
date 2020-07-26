@@ -16,6 +16,7 @@ local ScreenHeight = display.contentHeight
 local CentreX = display.contentCenterX
 local CentreY = display.contentCenterY 
 
+local menuBarIcon
 
 local function gotoDisclaimer( event )
 	composer.gotoScene( "Pages.DisclaimerPage" )
@@ -38,30 +39,28 @@ local function recordProgress()
 	composer.gotoScene("Pages.recordProgress.menu",{effect="slideLeft"})
 end
 
-globalvar.showTabbar = 0
-print(globalvar.showTabbar)
+local function showMenuBar()
+	local options = {
+		isModal = true,
+		effect = "slideRight",
+		time = 300,
+	}
+	composer.showOverlay( "Pages.SidebarMenu", options )
+end
 
-		local myRectangle = display.newRect( CentreX, 10, ScreenWidth, 70 )
-		myRectangle:setFillColor( 0,0.62,0.451,1 )
 
-local function checkTabbar()
-	if globalvar.showTabbar == 1 then
+menuBarIcon = display.newImage("Images/Icons/hamburger-menu-icon-svg-16.jpg")
+menuBarIcon:translate( CentreX - 130, 20 )
+menuBarIcon:scale(0.10,0.10)
 
-		local tabButtons = {
-			{ label="Homepage", defaultFile="button1.png", overFile="button1-down.png", width = 32, height = 32, onPress=gotoHomepage, selected=true },
-			{ label="Track progress", defaultFile="button2.png", overFile="button2-down.png", width = 32, height = 32, onPress=trackProgress },
-			{ label="Record progress", defaultFile="button2.png", overFile="button2-down.png", width = 32, height = 32, onPress=recordProgress },
-		}
-
-		local tabBar = widget.newTabBar{
-			top = display.contentHeight - 30,	
-			buttons = tabButtons
-		}
-		
-
-		
+function menuBarIcon:touch( event )
+	if event.phase == "began" then
+		showMenuBar()
+	return true
 	end
 end
-Runtime:addEventListener( "enterFrame", checkTabbar )
+menuBarIcon:addEventListener( "touch", menuBarIcon )
+
+
 
 gotoDisclaimer()

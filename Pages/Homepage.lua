@@ -1,12 +1,19 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local widget = require("widget")
- 
+
+local globalvar = require("globalvar")
 
 local ScreenWidth = display.contentWidth
 local ScreenHeight = display.contentHeight
 local CentreX = display.contentCenterX
 local CentreY = display.contentCenterY 
+
+titleTextstring = globalvar.titleTextstring
+print(titleTextstring)
+
+titleTextstring = "Homepage"
+print(titleTextstring)
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
@@ -22,7 +29,7 @@ local function trackProgress()
 end
 
 local function recordProgress()
-	composer.gotoScene("Pages.recordProgress.menu",{effect="slideLeft"})
+	composer.gotoScene("Pages.RecordProgress.menu",{effect="slideLeft"})
 end
 
 local function selfDiagnosis()
@@ -33,7 +40,8 @@ end
 local function gotoSettings()
 	composer.gotoScene("Pages.settingsmenu",{effect="slideLeft"})
 end
- 
+
+
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -43,7 +51,7 @@ function scene:create( event )
  
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
- 
+
 end
  
  
@@ -55,8 +63,16 @@ function scene:show( event )
  
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
- 
- 	
+
+	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
+	titleBar:setFillColor( 0,0.62,0.451,1 )
+	sceneGroup:insert(titleBar)
+	
+	local titleText = display.newText( "Homepage", CentreX, 10,  native.systemFont, 26 )
+	titleText:setFillColor( 0, 0, 0 )
+	sceneGroup:insert(titleText)	
+
+
 		
 local trackButton = widget.newButton(
     {
@@ -129,7 +145,7 @@ sceneGroup:insert(settingsButton)
  
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
- 
+
     end
 end
  
