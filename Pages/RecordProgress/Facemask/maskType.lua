@@ -15,14 +15,24 @@ local CentreY = display.contentCenterY
  
 display.setDefault("background",1,1,1)
  
-local prevScene = composer.getSceneName( "previous" )
 
-
-local function gotoNext(event)
+local function takeAnswer(event)
 	if event.phase == "ended" then
-		composer.gotoScene("Pages.RecordProgress.Facemask.tut3",{effect="slideLeft"})
+		if event.target.id == "Loops" then
+			composer.setVariable("TypeMask","Loops")
+			composer.gotoScene("Pages.RecordProgress.Facemask.tutMain",{effect="slideLeft"})
+		elseif event.target.id == "Ties" then
+			composer.setVariable("TypeMask", "Ties")
+			composer.gotoScene("Pages.RecordProgress.Facemask.tutMain",{effect="slideLeft"})
+		elseif event.target.id == "Bands" then
+			composer.setVariable("TypeMask","Bands")
+			composer.gotoScene("Pages.RecordProgress.Facemask.tutMain",{effect="slideLeft"})
+		end
 	end
 end
+
+local prevScene = composer.getSceneName( "previous" )
+
 
 local function gotoBack(event)
 	if event.phase == "ended" then
@@ -54,33 +64,67 @@ function scene:show( event )
         -- Code here runs when the scene is still off screen (but is about to come on screen)
  
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
-	titleBar:setFillColor( 0,0.62,0.451,1 )
-	sceneGroup:insert(titleBar)
+	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
 	
 	local titleText = display.newText( "Face mask instructions", CentreX, 10,  native.systemFont, 26 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 	
-	local questionText = display.newText( "Remove a mask from the box and make sure there are no obvious tears or holes in either side of the mask.", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
+	local questionText = display.newText( "What type of mask are you wearing?", CentreX, CentreY/2, ScreenWidth - 25, 0,native.systemFont, 26 )
 	questionText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(questionText)
 		
 			
-	local nextButton = widget.newButton(
+	local LoopButton = widget.newButton(
 		{
-			label = "Next",
-			onEvent = gotoNext,
+			label = "Ear Loops",
+			id = "Loops",
+			onEvent = takeAnswer,
 			shape = "roundedRect",
 			width = 60,
 			height = 40,
 			cornerRadius = 2,
-			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
+			fillColor = { default={0,1,1,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
-			x = CentreX*1.5,
-			y = CentreY*2,
+			x = CentreX,
+			y = CentreY*1.3,
 		}
 	)
-	sceneGroup:insert(nextButton)
+	sceneGroup:insert(LoopButton)
+
+	local TiesButton = widget.newButton(
+		{
+			label = "Ties",
+			id = "Ties",
+			onEvent = takeAnswer,
+			shape = "roundedRect",
+			width = 60,
+			height = 40,
+			cornerRadius = 2,
+			fillColor = { default={0,1,1,1}, over={1,0.1,0.7,0.4} },
+			strokeWidth = 4,
+			x = CentreX,
+			y = CentreY,
+		}
+	)
+	sceneGroup:insert(TiesButton)
+
+	local BandsButton = widget.newButton(
+		{
+			label = "Bands",
+			id = "Bands",
+			onEvent = takeAnswer,
+			shape = "roundedRect",
+			width = 60,
+			height = 40,
+			cornerRadius = 2,
+			fillColor = { default={0,1,1,1}, over={1,0.1,0.7,0.4} },
+			strokeWidth = 4,
+			x = CentreX,
+			y = CentreY/1.3,
+		}
+	)
+	sceneGroup:insert(BandsButton)
 	
 	local prevButton = widget.newButton(
 		{
@@ -92,7 +136,7 @@ function scene:show( event )
 			cornerRadius = 2,
 			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
-			x = CentreX/2,
+			x = CentreX,
 			y = CentreY*2,
 		}
 	)

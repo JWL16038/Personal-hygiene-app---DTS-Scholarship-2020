@@ -64,14 +64,13 @@ function scene:show( event )
         -- Code here runs when the scene is still off screen (but is about to come on screen)
  
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
-	titleBar:setFillColor( 0,0.62,0.451,1 )
-	sceneGroup:insert(titleBar)
+	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
 	
 	local titleText = display.newText( "Coughing Etiquette instructions", CentreX, 10,  native.systemFont, 22 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 	
-	local questionText = display.newText( "Did you cover your mouth when you cough or sneeze today?", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
+	local questionText = display.newText( "Did you cover your mouth when you cough or sneeze into your sleeve today?", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
 	questionText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(questionText)
 		
