@@ -18,40 +18,45 @@ local buttonYpos = CentreY/2 - 20
  
 local function hideMenuBar(event)
 	composer.hideOverlay( "slideLeft", 600 )
-end 
+end
 
-local function handleButtonEvent1( event )
+local function gotoTrack(event )
     if ( "ended" == event.phase ) then
         print( "Button was pressed and released" )
 		hideMenuBar()
+		composer.gotoScene("Pages.WIPpage",{effect="slideLeft"})
     end
 end
 
-local function handleButtonEvent2( event )
+local function gotoRecord(event )
     if ( "ended" == event.phase ) then
         print( "Button was pressed and released" )
 		hideMenuBar()
+		composer.gotoScene("Pages.RecordProgress.menu",{effect="slideLeft"})
     end
 end
 
-local function handleButtonEvent3( event )
+local function gotoSelftest(event )
     if ( "ended" == event.phase ) then
         print( "Button was pressed and released" )
 		hideMenuBar()
+		composer.gotoScene("Pages.WIPpage",{effect="slideLeft"})
     end
 end
 
-local function handleButtonEvent4( event )
+local function gotoFeedback(event )
     if ( "ended" == event.phase ) then
         print( "Button was pressed and released" )
 		hideMenuBar()
-    end
+		composer.gotoScene("Pages.WIPpage",{effect="slideLeft"})
+	end
 end
 
-local function handleButtonEvent5( event )
+local function gotoSettings(event )
     if ( "ended" == event.phase ) then
         print( "Button was pressed and released" )
 		hideMenuBar()
+		composer.gotoScene("Pages.WIPpage",{effect="slideLeft"})
     end
 end
 -- -----------------------------------------------------------------------------------
@@ -80,11 +85,11 @@ function scene:create( event )
 
 local buttonEventTable = 
 {
-handleButtonEvent1,handleButtonEvent2,handleButtonEvent3,handleButtonEvent4,handleButtonEvent5
+	gotoTrack, gotoRecord, gotoSelftest, gotoFeedback, gotoSettings
 }
 local buttonLabelTable = 
 {
-"Track","Record","COVID-19 self test","Send feedback","Settings"
+"Track","Record","COVID self test","Send feedback","Settings"
 }
 
 	local buttonOptions = 
@@ -99,8 +104,9 @@ local buttonLabelTable =
 			x = CentreX/2,
 			y = CentreY/2 - 20,
 			cornerRadius = 2,
-			fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} },
-			strokeColor = { default={1,0.4,0,1}, over={0.8,0.8,1,1} },
+			labelColor = { default={ 0, 0, 0 }},
+			fillColor = { default={1,0.647,0,1}, over={1,0.1,0.7,0.4} },
+			--fillColor = { default={1,1,0,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4
 		}
 		

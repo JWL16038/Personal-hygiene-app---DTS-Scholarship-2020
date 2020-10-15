@@ -14,16 +14,10 @@ local CentreY = display.contentCenterY
 -- -----------------------------------------------------------------------------------
  
 display.setDefault("background",1,1,1)
+
 local prevScene = composer.getSceneName( "previous" )
 
-
-local function gotoNext(event)
-	if event.phase == "ended" then
-		composer.gotoScene("Pages.RecordProgress.Handwashing.tut2",{effect="slideLeft"})
-	end
-end
-
-local function gotoBack(event)
+local function takeAnswer(event)
 	if event.phase == "ended" then
 		composer.gotoScene(prevScene,{effect="slideRight"})
 	end
@@ -55,47 +49,33 @@ function scene:show( event )
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
 	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
 	
-	local titleText = display.newText( "Hand washing instructions", CentreX, 10,  native.systemFont, 26 )
+	local titleText = display.newText( "Work in progress", CentreX, 10,  native.systemFont, 22 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 	
-	local questionText = display.newText( "Wet your hands with clean, running water (warm or cold), turn off the tap, and apply soap.", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
+	local questionText = display.newText("This section is still work in progress. Please check back in a later update!", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
 	questionText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(questionText)
 		
 			
-	local nextButton = widget.newButton(
+	local yesButton = widget.newButton(
 		{
-			label = "Next",
-			onEvent = gotoNext,
+			label = "Return",
+			onEvent = takeAnswer,
 			shape = "roundedRect",
-			width = 60,
+			width = 120,
 			height = 40,
 			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
 			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
-			x = CentreX*1.5,
+			x = CentreX,
 			y = CentreY*2,
 		}
 	)
-	sceneGroup:insert(nextButton)
-	
-	local prevButton = widget.newButton(
-		{
-			label = "Back",
-			onEvent = gotoBack,
-			shape = "roundedRect",
-			width = 60,
-			height = 40,
-			cornerRadius = 2,
-			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
-			strokeWidth = 4,
-			x = CentreX/2,
-			y = CentreY*2,
-		}
-	)
-	sceneGroup:insert(prevButton)
+	sceneGroup:insert(yesButton)
 
+	
 	 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen

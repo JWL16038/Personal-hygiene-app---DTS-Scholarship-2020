@@ -13,8 +13,7 @@ local instructionNo = 1
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
-local MaskType = composer.getVariable("TypeMask")
-print(MaskType)
+
 display.setDefault("background",1,1,1)
 local prevScene = composer.getSceneName( "previous" )
 
@@ -25,7 +24,6 @@ sqlcommand = ("SELECT * FROM FaceMask")
 local titleTable = {}
 local instructionTable = {}
 local idTable = {}
-local MaskTypeTable = {}
 local Images = {}
 local Videos = {}
 
@@ -33,20 +31,29 @@ for i in db:nrows(sqlcommand) do
 	SortID = i.SortID
 	Title = i.Title
 	Instruction = i.Instruction
-	MaskType = i.MaskType
 	ImageName = i.ImageName
 	VideoName = i.VideoName
-	print(ImageName)
 	table.insert(idTable,SortID)
 	table.insert(titleTable,SortID,Title)
 	table.insert(instructionTable,SortID,Instruction)
-	table.insert(MaskTypeTable,SortID,MaskType)
 	table.insert(Images,SortID,ImageName)
 	table.insert(Videos,SortID,VideoName)
 end
 
 local function updateText(event)
+	print("instructionNo: " .. instructionNo)
+	titleText.text = titleTable[instructionNo]
 	questionText.text = instructionTable[instructionNo]
+
+	instlength = instructionTable[instructionNo]
+	if string.len(instlength) > 90 then
+		print("text too long")
+		questionText.size = 20
+	else
+		print("text OK")
+		questionText.size = 24
+	end
+
 end
 
 local function updateImage(event)
@@ -56,7 +63,6 @@ local function updateImage(event)
 		local maxHeight = 150
 
 		image = display.newImage("Images/RecordProgress/FaceMask/" .. Images[instructionNo]  )
-
 		if image.width > image.height then --wide image
 			image.xScale = maxWidth / image.width
 			image.yScale = image.xScale
@@ -74,49 +80,27 @@ local function updateVideo(event)
 	if Videos[instructionNo] ~= nil then
 		display.remove(image)
 		display.remove(video)
-		local maxWidth = ScreenWidth *0.8
-		local maxHeight = 150
-		video = native.newVideo( CentreX, CentreY*1.2, 320, 480 )
-		print("Images/RecordProgress/HandWashing/" .. Videos[instructionNo] )
-		video:load("Images/RecordProgress/HandWashing/" .. Videos[instructionNo]  )
-
-		if video.width > video.height then --wide image
-			video.xScale = maxWidth / video.width
-			video.yScale = video.xScale
-		else -- tall image
-			video.yScale = maxHeight / video.height
-			video.xScale = video.yScale
-		end
+		video = native.newVideo( CentreX, CentreY*1.4, 320, 480 )
+		video:load("Images/RecordProgress/Facemask/" .. Videos[instructionNo]  )
 		video:play()
-		video:translate( CentreX, CentreY*1.4 )
 	else
+		display.remove(video)
 		print("no video found")
 	end
 end
 
-
 local function gotoNext(event)
 	if event.phase == "ended" then
-		--[[for i in MaskTypeTable do
-			loopFind = string.find(i,"EarLoops")
-			print(loopFind)
-		end
-		if MaskType == "Bands" then
-
-		elseif MaskType == "Ties" then
-
-		elseif MaskType == "Loops" then
-
-		end]]--
 
 		if instructionNo < table.maxn(idTable) then
 			instructionNo = instructionNo + 1
-			updateImage()
 			updateText()
+			updateImage()
 			updateVideo()
 		else
-			display.remove(image)
 			print("end of instructions")
+			display.remove(image)
+			display.remove(video)
 			display.remove(questionText)
 			composer.gotoScene("Pages.RecordProgress.Facemask.tutFinished",{effect="slideLeft"})
 			instructionNo = 1
@@ -128,10 +112,17 @@ local function gotoBack(event)
 	if event.phase == "ended" then
 		if instructionNo ~= 1 then
 			instructionNo = instructionNo - 1
+			updateText()
+			updateImage()
+			updateVideo()
+		else
+			print("end of instructions")
+			display.remove(image)
+			display.remove(video)
+			display.remove(questionText)
+			composer.gotoScene(prevScene,{effect="slideRight"})
+			instructionNo = 1
 		end
-		updateImage()
-		updateText()
-		updateVideo()
 	end
 end
 
@@ -160,17 +151,19 @@ function scene:show( event )
  
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
 	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
-	
-	local titleText = display.newText( Title, CentreX, 10,  native.systemFont, 26 )
+
+	titleText = display.newText( "", CentreX, 10,  native.systemFont, 26 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 
-	questionText = display.newText( instructionTable[1], CentreX, CentreY/2, ScreenWidth - 25, 0,native.systemFont, 26 )
+	questionText = display.newText( "", CentreX, CentreY/2 + 20, ScreenWidth - 25, 0,native.systemFont, 26 )
 	questionText:setFillColor( 0, 0, 0 )
+	--sceneGroup:insert(questionText)
 
-
+	updateText()
 	updateImage()
 	updateVideo()
+
 
 	local nextButton = widget.newButton(
 		{
@@ -180,6 +173,7 @@ function scene:show( event )
 			width = 60,
 			height = 40,
 			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
 			fillColor = { default={0.259, 0.961, 0.518,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
 			x = CentreX*1.5,
@@ -196,6 +190,7 @@ function scene:show( event )
 			width = 60,
 			height = 40,
 			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
 			fillColor = { default={0.259, 0.961, 0.518,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
 			x = CentreX/2,

@@ -14,18 +14,12 @@ local CentreY = display.contentCenterY
 -- -----------------------------------------------------------------------------------
  
 display.setDefault("background",1,1,1)
-local prevScene = composer.getSceneName( "previous" )
+ 
 
-
-local function gotoNext(event)
+local function takeAnswer(event)
 	if event.phase == "ended" then
-		composer.gotoScene("Pages.RecordProgress.CoughingEtiquette.tut2",{effect="slideLeft"})
-	end
-end
-
-local function gotoBack(event)
-	if event.phase == "ended" then
-		composer.gotoScene(prevScene,{effect="slideRight"})
+			composer.gotoScene("Pages.RecordProgress.menu",{effect="slideRight"})
+		
 	end
 end
 
@@ -59,43 +53,29 @@ function scene:show( event )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 	
-	local questionText = display.newText( "Cover your mouth and nose every time you cough or sneeze.", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
+	local questionText = display.newText( "Do you have any of these symptoms?", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
 	questionText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(questionText)
 		
 			
-	local nextButton = widget.newButton(
+	local yesButton = widget.newButton(
 		{
-			label = "Next",
-			onEvent = gotoNext,
+			label = "Return",
+			onEvent = takeAnswer,
 			shape = "roundedRect",
-			width = 60,
+			width = 120,
 			height = 40,
 			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
 			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
-			x = CentreX*1.5,
+			x = CentreX,
 			y = CentreY*2,
 		}
 	)
-	sceneGroup:insert(nextButton)
-	
-	local prevButton = widget.newButton(
-		{
-			label = "Back",
-			onEvent = gotoBack,
-			shape = "roundedRect",
-			width = 60,
-			height = 40,
-			cornerRadius = 2,
-			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
-			strokeWidth = 4,
-			x = CentreX/2,
-			y = CentreY*2,
-		}
-	)
-	sceneGroup:insert(prevButton)
+	sceneGroup:insert(yesButton)
 
+	
 	 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen

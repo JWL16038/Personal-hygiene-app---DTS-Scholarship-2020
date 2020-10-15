@@ -15,27 +15,14 @@ local CentreY = display.contentCenterY
  
 display.setDefault("background",1,1,1)
  
-local prevScene = composer.getSceneName( "previous" )
 
-
-local function gotoNext(event)
+local function takeAnswer(event)
 	if event.phase == "ended" then
-		composer.gotoScene("Pages.RecordProgress.Handwashing.tut5",{effect="slideLeft"})
+			composer.gotoScene("Pages.RecordProgress.menu",{effect="slideRight"})
+		
 	end
 end
 
-local function gotoBack(event)
-	if event.phase == "ended" then
-		composer.gotoScene(prevScene,{effect="slideRight"})
-	end
-end
-
-local function videoListener( event )
-    print( "Event phase: " .. event.phase )
-	if event.phase == "ended" then
-		composer.gotoScene("Pages.RecordProgress.Handwashing.tut5",{effect="slideLeft"})
-	end
-end
  
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -62,51 +49,33 @@ function scene:show( event )
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
 	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
 	
-	local titleText = display.newText( "Hand washing instructions", CentreX, 10,  native.systemFont, 26 )
+	local titleText = display.newText( "Coughing Etiquette instructions", CentreX, 10,  native.systemFont, 22 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 	
-
-	local karaokeVideo = native.newVideo(CentreX,CentreY,ScreenWidth,ScreenHeight)
-	karaokeVideo:load("happy_birthday.mp4",system.ResourceDirectory)
-	karaokeVideo:play()
-	karaokeVideo:addEventListener( "karaokeVideo", videoListener )
-	sceneGroup:insert(karaokeVideo)
+	local questionText = display.newText("Please keep practicing your coughing etiquette!", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
+	questionText:setFillColor( 0, 0, 0 )
+	sceneGroup:insert(questionText)
 		
-
-		
-	local nextButton = widget.newButton(
+			
+	local yesButton = widget.newButton(
 		{
-			label = "Next",
-			onEvent = gotoNext,
+			label = "Return",
+			onEvent = takeAnswer,
 			shape = "roundedRect",
-			width = 60,
+			width = 120,
 			height = 40,
 			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
 			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
-			x = CentreX*1.5,
+			x = CentreX,
 			y = CentreY*2,
 		}
 	)
-	sceneGroup:insert(nextButton)
+	sceneGroup:insert(yesButton)
+
 	
-	local prevButton = widget.newButton(
-		{
-			label = "Back",
-			onEvent = gotoBack,
-			shape = "roundedRect",
-			width = 60,
-			height = 40,
-			cornerRadius = 2,
-			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
-			strokeWidth = 4,
-			x = CentreX/2,
-			y = CentreY*2,
-		}
-	)
-	sceneGroup:insert(prevButton)
-
 	 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen

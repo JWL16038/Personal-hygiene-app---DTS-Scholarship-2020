@@ -22,22 +22,6 @@ local function gotoDisclaimer( event )
 	composer.gotoScene( "Pages.DisclaimerPage" )
 end
 
-local function gotoHomepage( event )
-	composer.gotoScene( "Pages.Homepage" )
-end
-
-local function onSecondView( event )
-	composer.gotoScene( "view2" )
-end
-
-local function trackProgress()
-	composer.gotoScene("Pages.recordProgress.menu",{effect="slideLeft"})
-
-end
-
-local function recordProgress()
-	composer.gotoScene("Pages.recordProgress.menu",{effect="slideLeft"})
-end
 
 local function showMenuBar()
 	local options = {
@@ -46,6 +30,7 @@ local function showMenuBar()
 		time = 300,
 	}
 	composer.showOverlay( "Pages.SidebarMenu", options )
+	menuBarIcon.isVisible = false
 end
 
 
@@ -54,7 +39,7 @@ menuBarIcon:translate( CentreX - 130, 20 )
 menuBarIcon:scale(0.10,0.10)
 
 function menuBarIcon:touch( event )
-	if event.phase == "began" then
+	if event.phase == "ended" then
 		showMenuBar()
 	return true
 	end

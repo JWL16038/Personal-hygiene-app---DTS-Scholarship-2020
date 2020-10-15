@@ -33,7 +33,6 @@ for i in db:nrows(sqlcommand) do
 	Instruction = i.Instruction
 	ImageName = i.ImageName
 	VideoName = i.VideoName
-	print(ImageName)
 	table.insert(idTable,SortID)
 	table.insert(titleTable,SortID,Title)
 	table.insert(instructionTable,SortID,Instruction)
@@ -42,66 +41,67 @@ for i in db:nrows(sqlcommand) do
 end
 
 local function updateText(event)
-	questionText.text = instructionTable[instructionNo]
+	if instructionTable[instructionNo] ~= nil then
+		print("instructionNo: " .. instructionNo)
+		titleText.text = titleTable[instructionNo]
+		questionText.text = instructionTable[instructionNo]
+
+		instlength = instructionTable[instructionNo]
+		if string.len(instlength) > 90 then
+			questionText.size = 20
+		else
+			questionText.size = 24
+		end
+	else
+		questionText.text = nil
+	end
 end
+
+
 
 local function updateImage(event)
 	if Images[instructionNo] ~= nil then
 		display.remove(image)
 		local maxWidth = ScreenWidth *0.8
 		local maxHeight = 150
-		print("Images/RecordProgress/HandWashing/" .. Images[instructionNo])
 		image = display.newImage("Images/RecordProgress/HandWashing/" .. Images[instructionNo]  )
 
 		if image.width > image.height then --wide image
 			image.xScale = maxWidth / image.width
 			image.yScale = image.xScale
 		else -- tall image
-			image.yScale = maxHeight / image.height
+			image.yScale = maxHeight / (image.height / 1.35)
 			image.xScale = image.yScale
 		end
 		image:translate( CentreX, CentreY*1.4 )
 	else
-		print("no image found")
+		display.remove(image)
 	end
 end
 
 local function updateVideo(event)
 	if Videos[instructionNo] ~= nil then
-		display.remove(image)
 		display.remove(video)
-		local maxWidth = ScreenWidth *0.8
-		local maxHeight = 150
-		video = native.newVideo( CentreX, CentreY*1.2, 320, 480 )
-		print("Images/RecordProgress/HandWashing/" .. Videos[instructionNo] )
+		video = native.newVideo( CentreX, CentreY*1.4 , 320, 480 )
 		video:load("Images/RecordProgress/HandWashing/" .. Videos[instructionNo]  )
-
-		if video.width > video.height then --wide image
-			video.xScale = maxWidth / video.width
-			video.yScale = video.xScale
-		else -- tall image
-			video.yScale = maxHeight / video.height
-			video.xScale = video.yScale
-		end
 		video:play()
-		video:translate( CentreX, CentreY*1.4 )
 	else
-		print("no video found")
+		display.remove(video)
 	end
 end
 
 
 local function gotoNext(event)
 	if event.phase == "ended" then
-
 		if instructionNo < table.maxn(idTable) then
 			instructionNo = instructionNo + 1
 			updateImage()
 			updateText()
 			updateVideo()
 		else
-			display.remove(image)
 			print("end of instructions")
+			display.remove(image)
+			display.remove(video)
 			display.remove(questionText)
 			composer.gotoScene("Pages.RecordProgress.Handwashing.tutFinished",{effect="slideLeft"})
 			instructionNo = 1
@@ -113,13 +113,19 @@ local function gotoBack(event)
 	if event.phase == "ended" then
 		if instructionNo ~= 1 then
 			instructionNo = instructionNo - 1
+			updateText()
+			updateImage()
+			updateVideo()
+		else
+			print("end of instructions")
+			display.remove(image)
+			display.remove(video)
+			display.remove(questionText)
+			composer.gotoScene(prevScene,{effect="slideRight"})
+			instructionNo = 1
 		end
-		updateImage()
-		updateText()
-		updateVideo()
 	end
 end
-
  
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -146,11 +152,11 @@ function scene:show( event )
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
 	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
 	
-	local titleText = display.newText( Title, CentreX, 10,  native.systemFont, 26 )
+	titleText = display.newText( titleTable[1], CentreX, 10,  native.systemFont, 26 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 
-	questionText = display.newText( instructionTable[1], CentreX, CentreY/2, ScreenWidth - 25, 0,native.systemFont, 26 )
+	questionText = display.newText( instructionTable[1], CentreX, CentreY/2, ScreenWidth - 25, 0,native.systemFont, 24 )
 	questionText:setFillColor( 0, 0, 0 )
 
 
@@ -165,6 +171,7 @@ function scene:show( event )
 			width = 60,
 			height = 40,
 			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
 			fillColor = { default={0.259, 0.961, 0.518,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
 			x = CentreX*1.5,
@@ -181,6 +188,7 @@ function scene:show( event )
 			width = 60,
 			height = 40,
 			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
 			fillColor = { default={0.259, 0.961, 0.518,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
 			x = CentreX/2,

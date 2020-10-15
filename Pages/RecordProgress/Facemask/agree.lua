@@ -21,13 +21,24 @@ local function takeAnswer(event)
 		if event.target.id == "Yes" then
 			print("user answered yes")
 			composer.gotoScene("Pages.RecordProgress.Facemask.agree2",{effect="slideLeft"})
-		elseif event.target.id == "No" then 
+		elseif event.target.id == "Maybe" then
+			print("user answered maybe")
+			composer.gotoScene("Pages.RecordProgress.Facemask.disagree",{effect="slideLeft"})
+		elseif event.target.id == "No" then
 			print("user answered no")
 			composer.gotoScene("Pages.RecordProgress.Facemask.disagree",{effect="slideLeft"})
 		end
 	end
 end
 
+local prevScene = composer.getSceneName( "previous" )
+
+
+local function gotoBack(event)
+	if event.phase == "ended" then
+		composer.gotoScene(prevScene,{effect="slideRight"})
+	end
+end
  
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -54,7 +65,7 @@ function scene:show( event )
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
 	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
 	
-	local titleText = display.newText( "Face mask instructions", CentreX, 10,  native.systemFont, 26 )
+	local titleText = display.newText( "Face mask quiz", CentreX, 10,  native.systemFont, 26 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 	
@@ -72,6 +83,7 @@ function scene:show( event )
 			width = 60,
 			height = 40,
 			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
 			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
 			x = CentreX/2,
@@ -89,14 +101,33 @@ function scene:show( event )
 			width = 60,
 			height = 40,
 			cornerRadius = 2,
-			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
+			labelColor = { default={ 0, 0, 0 }},
+			fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
 			x = CentreX*1.5,
 			y = CentreY*1.75,
 		}
 	)
 	sceneGroup:insert(noButton)
-	
+
+	local maybeButton = widget.newButton(
+			{
+				label = "Maybe",
+				id = "Maybe",
+				onEvent = takeAnswer,
+				shape = "roundedRect",
+				width = 60,
+				height = 40,
+				cornerRadius = 2,
+				labelColor = { default={ 0, 0, 0 }},
+				fillColor = { default={1,1,0,1}, over={1,0.1,0.7,0.4} },
+				strokeWidth = 4,
+				x = CentreX,
+				y = CentreY*1.75,
+			}
+	)
+	sceneGroup:insert(maybeButton)
+
 	local prevButton = widget.newButton(
 		{
 			label = "Back",
@@ -105,6 +136,7 @@ function scene:show( event )
 			width = 60,
 			height = 40,
 			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
 			fillColor = { default={0.259, 0.961, 0.518,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
 			x = CentreX,

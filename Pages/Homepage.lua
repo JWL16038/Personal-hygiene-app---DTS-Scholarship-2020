@@ -22,23 +22,28 @@ print(titleTextstring)
  
 display.setDefault("background",1,1,1)
  
- 
-local function trackProgress()
-	composer.gotoScene("Pages.recordProgress",{effect="slideLeft"})
+
+
+local function gotoQuiz()
+    composer.gotoScene("Pages.RecordProgress.menu",{effect="slideLeft"})
+
+end
+local function gotoTutorials()
+    composer.gotoScene("Pages.tutorials",{effect="slideLeft"})
+end
+
+local function gotoselfDiagnosis()
+	composer.gotoScene("Pages.WIPpage",{effect="slideLeft"})
+end
+
+local function gotoNotifications()
+	composer.gotoScene("Pages.WIPpage",{effect="slideLeft"})
 
 end
 
-local function recordProgress()
-	composer.gotoScene("Pages.RecordProgress.menu",{effect="slideLeft"})
-end
-
-local function selfDiagnosis()
-	composer.gotoScene("Pages.selfDiagnosis.menu",{effect="slideLeft"})
-
-end
 
 local function gotoSettings()
-	composer.gotoScene("Pages.settingsmenu",{effect="slideLeft"})
+	composer.gotoScene("Pages.WIPpage",{effect="slideLeft"})
 end
 
 
@@ -65,84 +70,58 @@ function scene:show( event )
         -- Code here runs when the scene is still off screen (but is about to come on screen)
 
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
-	titleBar:setFillColor(0.561, 0.733,0.6,1)
+	
+	--titleBar:setFillColor(0.11, 0.459,0.741,1)
+	--titleBar:setFillColor(0.251, 0.749,0.251,1)
+ titleBar:setFillColor(0.561, 0.733,0.6,1)	-- original
 	sceneGroup:insert(titleBar)
 	
 	local titleText = display.newText( "Homepage", CentreX, 10,  native.systemFont, 26 )
 	titleText:setFillColor( 0, 0, 0 )
-	sceneGroup:insert(titleText)	
+	sceneGroup:insert(titleText)
 
 
-		
-local trackButton = widget.newButton(
-    {
-        label = "Track my progress",
-		labelColor = { default={ 0, 0, 0 }},
-        onEvent = trackProgress,
-        shape = "roundedRect",
-        width = 160,
-        height = 40,
-        cornerRadius = 2,
-        fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
-        strokeWidth = 4,
-		x = CentreX,
-		y = CentreY/2,
-    }
-)
-sceneGroup:insert(trackButton)
-		
-local recordButton = widget.newButton(
-    {
-        label = "Record my progress",
- 		labelColor = { default={ 0, 0, 0 }},
-       onEvent = recordProgress,
-        shape = "roundedRect",
-        width = 160,
-        height = 40,
-        cornerRadius = 2,
-        fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
-        strokeWidth = 4,
-		x = CentreX,
-		y = CentreY/1.15,
-    }
-)
-sceneGroup:insert(recordButton)
 
-local selfdiagnosisButton = widget.newButton(
-    {
-        label = "COVID-19 Self diagnosis",
-  		labelColor = { default={ 0, 0, 0 }},
-		onEvent = selfDiagnosis,
-        shape = "roundedRect",
-        width = 200,
-        height = 40,
-        cornerRadius = 2,
-        fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
-        strokeWidth = 4,
-		x = CentreX,
-		y = CentreY/0.8,
-    }
-)
-sceneGroup:insert(selfdiagnosisButton)
 
-local settingsButton = widget.newButton(
-    {
-        label = "Settings",
-		labelColor = { default={ 0, 0, 0 }},
-        onEvent = gotoSettings,
-        shape = "roundedRect",
-        width = 200,
-        height = 40,
-        cornerRadius = 2,
-        fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
-        strokeWidth = 4,
-		x = CentreX,
-		y = CentreY * 1.7,
-    }
-)
-sceneGroup:insert(settingsButton)
+        local buttonEventTable =
+        {
+            gotoQuiz, gotoTutorials, gotoselfDiagnosis, gotoNotifications,gotoSettings
+        }
+        local buttonLabelTable =
+        {
+            "Hygiene Quiz","Hygiene Tutorials","COVID self test","Notifications","Settings"
+        }
 
- 
+
+
+        local buttonOptions =
+        {
+            label = nil,
+            onEvent = nil,
+            emboss = false,
+            -- Properties for a rounded rectangle button
+            shape = "roundedRect",
+            width = 150,
+            height = 60,
+            x = CentreX,
+            y = CentreY/4,
+            cornerRadius = 2,
+            labelColor = { default={ 0, 0, 0 }},
+            fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
+            --fillColor = { default={1,1,0,1}, over={1,0.1,0.7,0.4} },
+            strokeWidth = 4,
+        }
+
+
+        for A = 1, #buttonLabelTable do
+            buttonOptions.y = buttonOptions.y + 80
+            buttonOptions.onEvent = buttonEventTable[A]
+            buttonOptions.label = buttonLabelTable[A]
+            local button1 = widget.newButton(buttonOptions)
+            sceneGroup:insert(button1)
+        end
+
+
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
 

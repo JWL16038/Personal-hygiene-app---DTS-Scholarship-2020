@@ -1,0 +1,10 @@
+
+
+var mainColour = {
+  "topBar":"test",
+  "background":"test"
+};
+
+var buttonColours = {
+  "colour":"test"
+}

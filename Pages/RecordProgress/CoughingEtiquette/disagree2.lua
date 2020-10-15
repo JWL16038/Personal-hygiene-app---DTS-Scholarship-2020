@@ -48,8 +48,8 @@ function scene:show( event )
  
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
 	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
-	
-	local titleText = display.newText( "Coughing Etiquette instructions", CentreX, 10,  native.systemFont, 22 )
+
+		local titleText = display.newText( "Coughing Etiquette quiz", CentreX, 10,  native.systemFont, 22 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 	
@@ -66,6 +66,7 @@ function scene:show( event )
 			width = 120,
 			height = 40,
 			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
 			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
 			x = CentreX,

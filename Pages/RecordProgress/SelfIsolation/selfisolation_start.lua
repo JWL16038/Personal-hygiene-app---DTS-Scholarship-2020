@@ -15,14 +15,24 @@ local CentreY = display.contentCenterY
  
 display.setDefault("background",1,1,1)
  
-local prevScene = composer.getSceneName( "previous" )
 
-
-local function gotoNext(event)
+local function takeAnswer(event)
 	if event.phase == "ended" then
-		composer.gotoScene("Pages.RecordProgress.Handwashing.tut4",{effect="slideLeft"})
+		if event.target.id == "Yes" then
+			print("user answered yes")
+			composer.gotoScene("Pages.RecordProgress.SelfIsolation.agree",{effect="slideLeft"})
+		elseif event.target.id == "Maybe" then 
+			print("user answered maybe")
+			composer.gotoScene("Pages.RecordProgress.SelfIsolation.disagree",{effect="slideLeft"})
+		elseif event.target.id == "No" then 
+			print("user answered no")
+			composer.gotoScene("Pages.RecordProgress.SelfIsolation.disagree",{effect="slideLeft"})
+		end
 	end
 end
+
+local prevScene = composer.getSceneName( "previous" )
+
 
 local function gotoBack(event)
 	if event.phase == "ended" then
@@ -30,6 +40,7 @@ local function gotoBack(event)
 	end
 end
 
+ 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -55,30 +66,68 @@ function scene:show( event )
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
 	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
 	
-	local titleText = display.newText( "Hand washing instructions", CentreX, 10,  native.systemFont, 26 )
+	local titleText = display.newText( "Self isolation instructions", CentreX, 10,  native.systemFont, 22 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 	
-	local questionText = display.newText( "Scrub your hands under running water for at least 20 seconds. Need a timer? Hum the “Happy Birthday” song from beginning to end twice.\n\nReady to begin singing happy birthday?", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
+	local questionText = display.newText( "Did you come into contact with someone who has COVID-19 symptoms?\nOr do you have COVID-19 symptoms?", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
 	questionText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(questionText)
 		
 			
-	local nextButton = widget.newButton(
+	local yesButton = widget.newButton(
 		{
-			label = "Next",
-			onEvent = gotoNext,
+			label = "Yes",
+			id = "Yes",
+			onEvent = takeAnswer,
 			shape = "roundedRect",
 			width = 60,
 			height = 40,
 			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
 			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
-			x = CentreX*1.5,
-			y = CentreY*2,
+			x = CentreX/2,
+			y = CentreY*1.75,
 		}
 	)
-	sceneGroup:insert(nextButton)
+	sceneGroup:insert(yesButton)
+
+	local maybeButton = widget.newButton(
+		{
+			label = "Maybe",
+			id = "Maybe",
+			onEvent = takeAnswer,
+			shape = "roundedRect",
+			width = 60,
+			height = 40,
+			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
+			fillColor = { default={1,1,0,1}, over={1,0.1,0.7,0.4} },
+			strokeWidth = 4,
+			x = CentreX,
+			y = CentreY*1.75,
+		}
+	)
+	sceneGroup:insert(maybeButton)
+
+	local noButton = widget.newButton(
+		{
+			label = "No",
+			id = "No",
+			onEvent = takeAnswer,
+			shape = "roundedRect",
+			width = 60,
+			height = 40,
+			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
+			fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} },
+			strokeWidth = 4,
+			x = CentreX*1.5,
+			y = CentreY*1.75,
+		}
+	)
+	sceneGroup:insert(noButton)
 	
 	local prevButton = widget.newButton(
 		{
@@ -90,7 +139,7 @@ function scene:show( event )
 			cornerRadius = 2,
 			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
-			x = CentreX/2,
+			x = CentreX,
 			y = CentreY*2,
 		}
 	)

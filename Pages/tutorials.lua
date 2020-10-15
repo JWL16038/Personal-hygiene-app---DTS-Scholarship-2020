@@ -15,15 +15,37 @@ local CentreY = display.contentCenterY
  
 display.setDefault("background",1,1,1)
  
-
-local function takeAnswer(event)
-	if event.phase == "ended" then
-			composer.gotoScene("Pages.RecordProgress.menu",{effect="slideRight"})
-		
-	end
+ 
+local function gotoHandwash(event)
+    if event.phase == "ended" then
+        composer.gotoScene("Pages.RecordProgress.Handwashing.tutMain",{effect="slideLeft"})
+    end
 end
 
- 
+local function gotoCoughingEtiquette(event)
+    if event.phase == "ended" then
+        composer.gotoScene("Pages.RecordProgress.CoughingEtiquette.tutMain",{effect="slideLeft"})
+    end
+end
+
+local function gotoFacemask(event)
+    if event.phase == "ended" then
+        composer.gotoScene("Pages.RecordProgress.Facemask.tutMain",{effect="slideLeft"})
+    end
+end
+
+local prevScene = composer.getSceneName( "previous" )
+
+
+local function gotoBack(event)
+    if event.phase == "ended" then
+        composer.gotoScene(prevScene,{effect="slideRight"})
+    end
+end
+
+
+
+
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -49,39 +71,81 @@ function scene:show( event )
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
 	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
 
-		local titleText = display.newText( "Hand washing quiz", CentreX, 10,  native.systemFont, 26 )
+	local titleText = display.newText( "Tutorials", CentreX, 10,  native.systemFont, 26 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
-	
-	local questionText = display.newText( "Great! You’re following the correct hygiene practices.\n\n+5 hygiene points had been added", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
-	questionText:setFillColor( 0, 0, 0 )
-	sceneGroup:insert(questionText)
 		
-			
-	local yesButton = widget.newButton(
-		{
-			label = "Return",
-			onEvent = takeAnswer,
-			shape = "roundedRect",
-			width = 120,
-			height = 40,
-			cornerRadius = 2,
-			labelColor = { default={ 0, 0, 0 }},
-			fillColor = { default={0.259, 0.961, 0.518,1}, over={1,0.1,0.7,0.4} },
-			strokeWidth = 4,
-			x = CentreX,
-			y = CentreY*2,
-		}
-	)
-	sceneGroup:insert(yesButton)
+local trackButton = widget.newButton(
+    {
+        label = "Hand washing",
+		labelColor = { default={ 0, 0, 0 }},
+        onEvent = gotoHandwash,
+        shape = "roundedRect",
+        width = 160,
+        height = 40,
+        cornerRadius = 2,
+        fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
+        strokeWidth = 4,
+		x = CentreX,
+		y = CentreY/2,
+    }
+)
+sceneGroup:insert(trackButton)
+		
+local recordButton = widget.newButton(
+    {
+        label = "Coughing etiquette",
+ 		labelColor = { default={ 0, 0, 0 }},
+       onEvent = gotoCoughingEtiquette,
+        shape = "roundedRect",
+        width = 160,
+        height = 40,
+        cornerRadius = 2,
+        fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
+        strokeWidth = 4,
+		x = CentreX,
+		y = CentreY/1.15,
+    }
+)
+sceneGroup:insert(recordButton)
 
-	
-	 
+local selfdiagnosisButton = widget.newButton(
+    {
+        label = "Wearing a face mask",
+  		labelColor = { default={ 0, 0, 0 }},
+		onEvent = gotoFacemask,
+        shape = "roundedRect",
+        width = 200,
+        height = 40,
+        cornerRadius = 2,
+        fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
+        strokeWidth = 4,
+		x = CentreX,
+		y = CentreY/0.8,
+    }
+)
+sceneGroup:insert(selfdiagnosisButton)
+
+local prevButton = widget.newButton(
+        {
+            label = "Back",
+            onEvent = gotoBack,
+            shape = "roundedRect",
+            width = 60,
+            height = 40,
+            cornerRadius = 2,
+            labelColor = { default={ 0, 0, 0 }},
+            fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
+            strokeWidth = 4,
+            x = CentreX,
+            y = CentreY*2,
+        }
+)
+sceneGroup:insert(prevButton)
+
+ 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
- 
-	
-	
  
     end
 end

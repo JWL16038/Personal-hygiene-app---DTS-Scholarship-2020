@@ -7,6 +7,7 @@ local ScreenWidth = display.contentWidth
 local ScreenHeight = display.contentHeight
 local CentreX = display.contentCenterX
 local CentreY = display.contentCenterY 
+local CentreY = display.contentCenterY 
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
@@ -15,14 +16,22 @@ local CentreY = display.contentCenterY
  
 display.setDefault("background",1,1,1)
  
-local prevScene = composer.getSceneName( "previous" )
 
-
-local function gotoNext(event)
+local function takeAnswer(event)
 	if event.phase == "ended" then
-		composer.gotoScene("Pages.RecordProgress.CoughingEtiquette.tutFinished",{effect="slideLeft"})
+		if event.target.id == "Yes" then
+			print("user answered yes")
+			composer.gotoScene("Pages.RecordProgress.CoughingEtiquette.tutMain",{effect="slideLeft"})
+		elseif event.target.id == "No" then 
+			print("user answered no")
+			composer.gotoScene("Pages.RecordProgress.CoughingEtiquette.disagree2",{effect="slideLeft"})
+
+		end
 	end
 end
+
+local prevScene = composer.getSceneName( "previous" )
+
 
 local function gotoBack(event)
 	if event.phase == "ended" then
@@ -60,26 +69,46 @@ function scene:show( event )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 	
-	local questionText = display.newText( "Avoid touching your face with your hands (especially if you know they’re contaminated, for example if you’ve just wiped your sick child’s nose).", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
+	local questionText = display.newText( "You might need to practice the correct coughing etiquette technique.\n\nWould you like to see the tutorial again?", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
 	questionText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(questionText)
 		
 			
-	local nextButton = widget.newButton(
+	local yesButton = widget.newButton(
 		{
-			label = "Next",
-			onEvent = gotoNext,
+			label = "Yes",
+			id = "Yes",
+			onEvent = takeAnswer,
 			shape = "roundedRect",
 			width = 60,
 			height = 40,
 			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
 			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
-			x = CentreX*1.5,
-			y = CentreY*2,
+			x = CentreX/2,
+			y = CentreY*1.75,
 		}
 	)
-	sceneGroup:insert(nextButton)
+	sceneGroup:insert(yesButton)
+
+	local noButton = widget.newButton(
+		{
+			label = "No",
+			id = "No",
+			onEvent = takeAnswer,
+			shape = "roundedRect",
+			width = 60,
+			height = 40,
+			cornerRadius = 2,
+			labelColor = { default={ 0, 0, 0 }},
+			fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} },
+			strokeWidth = 4,
+			x = CentreX*1.5,
+			y = CentreY*1.75,
+		}
+	)
+	sceneGroup:insert(noButton)
 	
 	local prevButton = widget.newButton(
 		{
@@ -91,11 +120,11 @@ function scene:show( event )
 			cornerRadius = 2,
 			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
-			x = CentreX/2,
+			x = CentreX,
 			y = CentreY*2,
 		}
 	)
-	sceneGroup:insert(prevButton)
+	sceneGroup:insert(prevButton)	
 	 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen

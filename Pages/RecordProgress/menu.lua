@@ -27,13 +27,19 @@ end
 
 local function gotoFacemask()
 	composer.gotoScene("Pages.RecordProgress.Facemask.facemask_start",{effect="slideLeft"})
-
 end
 
-local function gotoSettings()
-	composer.gotoScene("Pages.settingsmenu",{effect="slideLeft"})
+local prevScene = composer.getSceneName( "previous" )
+
+
+local function gotoBack(event)
+    if event.phase == "ended" then
+        composer.gotoScene(prevScene,{effect="slideRight"})
+    end
 end
- 
+
+
+
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -59,19 +65,20 @@ function scene:show( event )
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
 	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
 	
-	local titleText = display.newText( "Record my progress", CentreX, 10,  native.systemFont, 26 )
+	local titleText = display.newText( "Hygiene Quiz", CentreX, 10,  native.systemFont, 26 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 		
 local trackButton = widget.newButton(
     {
-        label = "Handing washing",
+        label = "Hand washing",
 		labelColor = { default={ 0, 0, 0 }},
         onEvent = gotoHandwash,
         shape = "roundedRect",
         width = 160,
         height = 40,
         cornerRadius = 2,
+        labelColor = { default={ 0, 0, 0 }},
         fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
         strokeWidth = 4,
 		x = CentreX,
@@ -89,6 +96,7 @@ local recordButton = widget.newButton(
         width = 160,
         height = 40,
         cornerRadius = 2,
+        labelColor = { default={ 0, 0, 0 }},
         fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
         strokeWidth = 4,
 		x = CentreX,
@@ -106,6 +114,7 @@ local selfdiagnosisButton = widget.newButton(
         width = 200,
         height = 40,
         cornerRadius = 2,
+        labelColor = { default={ 0, 0, 0 }},
         fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
         strokeWidth = 4,
 		x = CentreX,
@@ -114,23 +123,22 @@ local selfdiagnosisButton = widget.newButton(
 )
 sceneGroup:insert(selfdiagnosisButton)
 
-local settingsButton = widget.newButton(
-    {
-        label = "Self isolation",
-		labelColor = { default={ 0, 0, 0 }},
-        onEvent = gotoSettings,
-        shape = "roundedRect",
-        width = 200,
-        height = 40,
-        cornerRadius = 2,
-        fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
-        strokeWidth = 4,
-		x = CentreX,
-		y = CentreY * 1.7,
-    }
+local prevButton = widget.newButton(
+        {
+            label = "Back",
+            onEvent = gotoBack,
+            shape = "roundedRect",
+            width = 60,
+            height = 40,
+            cornerRadius = 2,
+            labelColor = { default={ 0, 0, 0 }},
+            fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
+            strokeWidth = 4,
+            x = CentreX,
+            y = CentreY*2,
+        }
 )
-sceneGroup:insert(settingsButton)
-
+sceneGroup:insert(prevButton)
  
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen

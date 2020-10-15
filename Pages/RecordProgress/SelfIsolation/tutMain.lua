@@ -1,32 +1,120 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local widget = require("widget")
- 
+local sqlite3 = require("sqlite3")
 
 local ScreenWidth = display.contentWidth
 local ScreenHeight = display.contentHeight
 local CentreX = display.contentCenterX
 local CentreY = display.contentCenterY 
 
+local instructionNo = 1
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
- 
+
 display.setDefault("background",1,1,1)
- 
 local prevScene = composer.getSceneName( "previous" )
+
+local textpath = system.pathForFile("SQLiteDB.db", system.ResourceDirectory)
+local db = sqlite3.open(textpath)
+
+sqlcommand = ("SELECT * FROM CoughingEtiquette")
+local titleTable = {}
+local instructionTable = {}
+local idTable = {}
+local Images = {}
+local Videos = {}
+
+for i in db:nrows(sqlcommand) do
+	SortID = i.SortID
+	Title = i.Title
+	Instruction = i.Instruction
+	ImageName = i.ImageName
+	VideoName = i.VideoName
+	print(ImageName)
+	table.insert(idTable,SortID)
+	table.insert(titleTable,SortID,Title)
+	table.insert(instructionTable,SortID,Instruction)
+	table.insert(Images,SortID,ImageName)
+	table.insert(Videos,SortID,VideoName)
+end
+
+local function updateText(event)
+	questionText.text = instructionTable[instructionNo]
+end
+
+local function updateImage(event)
+	if Images[instructionNo] ~= nil then
+		display.remove(image)
+		local maxWidth = ScreenWidth *0.8
+		local maxHeight = 150
+		image = display.newImage("Images/RecordProgress/CoughingEtiquette/" .. Images[instructionNo]  )
+
+		if image.width > image.height then --wide image
+			image.xScale = maxWidth / image.width
+			image.yScale = image.xScale
+		else -- tall image
+			image.yScale = maxHeight / image.height
+			image.xScale = image.yScale
+		end
+		image:translate( CentreX, CentreY*1.4 )
+	else
+		print("no image found")
+	end
+end
+
+local function updateVideo(event)
+	if Videos[instructionNo] ~= nil then
+		display.remove(image)
+		display.remove(video)
+		local maxWidth = ScreenWidth *0.8
+		local maxHeight = 150
+		video = native.newVideo( CentreX, CentreY*1.2, 320, 480 )
+		video:load("Images/RecordProgress/CoughingEtiquette/" .. Videos[instructionNo]  )
+
+		if video.width > video.height then --wide image
+			video.xScale = maxWidth / video.width
+			video.yScale = video.xScale
+		else -- tall image
+			video.yScale = maxHeight / video.height
+			video.xScale = video.yScale
+		end
+		video:play()
+		video:translate( CentreX, CentreY*1.4 )
+	else
+		print("no video found")
+	end
+end
 
 
 local function gotoNext(event)
 	if event.phase == "ended" then
-		composer.gotoScene("Pages.RecordProgress.Handwashing.tutFinished",{effect="slideLeft"})
+
+		if instructionNo < table.maxn(idTable) then
+			instructionNo = instructionNo + 1
+			updateImage()
+			updateText()
+			updateVideo()
+		else
+			display.remove(image)
+			print("end of instructions")
+			display.remove(questionText)
+			composer.gotoScene("Pages.RecordProgress.CoughingEtiquette.tutFinished",{effect="slideLeft"})
+			instructionNo = 1
+		end
 	end
 end
 
 local function gotoBack(event)
 	if event.phase == "ended" then
-		composer.gotoScene(prevScene,{effect="slideRight"})
+		if instructionNo ~= 1 then
+			instructionNo = instructionNo - 1
+		end
+		updateImage()
+		updateText()
+		updateVideo()
 	end
 end
 
@@ -56,15 +144,17 @@ function scene:show( event )
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
 	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
 	
-	local titleText = display.newText( "Hand washing instructions", CentreX, 10,  native.systemFont, 26 )
+	local titleText = display.newText( Title, CentreX, 10,  native.systemFont, 26 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
-	
-	local questionText = display.newText( "Dry your hands using a clean towel or air dry them.", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
+
+	questionText = display.newText( instructionTable[1], CentreX, CentreY/2, ScreenWidth - 25, 0,native.systemFont, 24 )
 	questionText:setFillColor( 0, 0, 0 )
-	sceneGroup:insert(questionText)
-		
-			
+
+
+	updateImage()
+	updateVideo()
+
 	local nextButton = widget.newButton(
 		{
 			label = "Next",
@@ -73,7 +163,7 @@ function scene:show( event )
 			width = 60,
 			height = 40,
 			cornerRadius = 2,
-			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
+			fillColor = { default={0.259, 0.961, 0.518,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
 			x = CentreX*1.5,
 			y = CentreY*2,
@@ -89,14 +179,15 @@ function scene:show( event )
 			width = 60,
 			height = 40,
 			cornerRadius = 2,
-			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
+			fillColor = { default={0.259, 0.961, 0.518,1}, over={1,0.1,0.7,0.4} },
 			strokeWidth = 4,
 			x = CentreX/2,
 			y = CentreY*2,
 		}
 	)
 	sceneGroup:insert(prevButton)
-	
+
+	 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
  
