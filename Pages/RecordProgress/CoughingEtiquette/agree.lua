@@ -6,13 +6,17 @@ local widget = require("widget")
 local ScreenWidth = display.contentWidth
 local ScreenHeight = display.contentHeight
 local CentreX = display.contentCenterX
-local CentreY = display.contentCenterY 
+local CentreY = display.contentCenterY
 
+local PointsGlobal = require( "HygienePoints" )
+print("Hygiene points: " .. PointsGlobal.number)
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
- 
+
+
+
 display.setDefault("background",1,1,1)
  
 
@@ -56,8 +60,11 @@ function scene:show( event )
 	local questionText = display.newText( "Great! You’re following the correct hygiene practices.\n\n+5 hygiene points had been added", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
 	questionText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(questionText)
-		
-			
+
+	local HygienePoints = PointsGlobal.number
+	HygienePoints = HygienePoints + 5
+	PointsGlobal.number = HygienePoints
+
 	local yesButton = widget.newButton(
 		{
 			label = "Return",

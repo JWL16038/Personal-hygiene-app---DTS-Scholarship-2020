@@ -7,7 +7,9 @@ local globalvar = require("globalvar")
 local ScreenWidth = display.contentWidth
 local ScreenHeight = display.contentHeight
 local CentreX = display.contentCenterX
-local CentreY = display.contentCenterY 
+local CentreY = display.contentCenterY
+
+local PointsGlobal = require( "HygienePoints" )
 
 titleTextstring = globalvar.titleTextstring
 print(titleTextstring)
@@ -81,7 +83,12 @@ function scene:show( event )
 	sceneGroup:insert(titleText)
 
 
-
+        local pointsText = display.newText( "",  CentreX, CentreY + 60, 200,ScreenHeight, native.systemFont, 24 )
+        pointsText:setFillColor( 0,0,0 )
+        pointsText.align = "center"
+        sceneGroup:insert(pointsText)
+        print("Hygiene points: " .. PointsGlobal.number)
+        pointsText.text = "Total hygiene points earned: " .. PointsGlobal.number
 
         local buttonEventTable =
         {
@@ -104,7 +111,7 @@ function scene:show( event )
             width = 150,
             height = 60,
             x = CentreX,
-            y = CentreY/4,
+            y = CentreY/3,
             cornerRadius = 2,
             labelColor = { default={ 0, 0, 0 }},
             fillColor = { default={0.5,0.5,0.5,1}, over={1,0.1,0.7,0.4} },
@@ -140,7 +147,7 @@ function scene:hide( event )
  
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
- 
+        composer.removeScene( "Pages.Homepage", False )
     end
 end
  

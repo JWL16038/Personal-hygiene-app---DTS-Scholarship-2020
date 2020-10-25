@@ -1,13 +1,15 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local widget = require("widget")
- 
 
 local ScreenWidth = display.contentWidth
 local ScreenHeight = display.contentHeight
 local CentreX = display.contentCenterX
-local CentreY = display.contentCenterY 
+local CentreY = display.contentCenterY
 
+local PointsGlobal = require( "HygienePoints" )
+PointsGlobal.number = 0
+print("Starting hygiene points: " .. PointsGlobal.number)
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
@@ -15,28 +17,15 @@ local CentreY = display.contentCenterY
  
 display.setDefault("background",1,1,1)
  
-
-local function takeAnswer(event)
-	if event.phase == "ended" then
-		if event.target.id == "Yes" then
-			print("user answered yes")
-			composer.gotoScene("Pages.RecordProgress.Facemask.agree",{effect="slideLeft"})
-		elseif event.target.id == "No" then 
-			print("user answered no")
-			composer.gotoScene("Pages.RecordProgress.Facemask.disagree",{effect="slideLeft"})
-		end
-	end
+ 
+local function agree(event)
+	composer.gotoScene( "Pages.Homepage",{effect="slideLeft"})
 end
 
-local prevScene = composer.getSceneName( "previous" )
-
-
-local function gotoBack(event)
-	if event.phase == "ended" then
-		composer.gotoScene(prevScene,{effect="slideRight"})
-	end
+local function disagree()
+	os.exit()
 end
-
+ 
  
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -47,7 +36,8 @@ function scene:create( event )
  
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
- 
+	
+
 end
  
  
@@ -59,78 +49,73 @@ function scene:show( event )
  
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
- 
-	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
-	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
 
-		local titleText = display.newText( "Face mask quiz", CentreX, 10,  native.systemFont, 22 )
-	titleText:setFillColor( 0, 0, 0 )
-	sceneGroup:insert(titleText)
-	
-	local questionText = display.newText( "Did you wear any face mask(s) when you went out today in a crowded place?", CentreX, CentreY, ScreenWidth - 25, 0,native.systemFont, 26 )
-	questionText:setFillColor( 0, 0, 0 )
-	sceneGroup:insert(questionText)
-		
-			
-	local yesButton = widget.newButton(
-		{
-			label = "Yes",
-			id = "Yes",
-			onEvent = takeAnswer,
-			shape = "roundedRect",
-			width = 60,
-			height = 40,
-			cornerRadius = 2,
-			labelColor = { default={ 0, 0, 0 }},
-			fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
-			strokeWidth = 4,
-			x = CentreX/2,
-			y = CentreY*1.75,
-		}
-	)
-	sceneGroup:insert(yesButton)
+		local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
+		titleBar:setFillColor(0.561, 0.733,0.6,1)
+		sceneGroup:insert(titleBar)			
+		local titleText = display.newText( "Introduction", CentreX, 10,  native.systemFont, 26 )
+		titleText:setFillColor( 0, 0, 0 )
+		sceneGroup:insert(titleText)		
 
-	local noButton = widget.newButton(
-		{
-			label = "No",
-			id = "No",
-			onEvent = takeAnswer,
-			shape = "roundedRect",
-			width = 60,
-			height = 40,
-			cornerRadius = 2,
-			labelColor = { default={ 0, 0, 0 }},
-			fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} },
-			strokeWidth = 4,
-			x = CentreX*1.5,
-			y = CentreY*1.75,
-		}
-	)
-	sceneGroup:insert(noButton)
-	
-	local prevButton = widget.newButton(
-		{
-			label = "Back",
-			onEvent = gotoBack,
-			shape = "roundedRect",
-			width = 60,
-			height = 40,
-			cornerRadius = 2,
-			labelColor = { default={ 0, 0, 0 }},
-			fillColor = { default={0.259, 0.961, 0.518,1}, over={1,0.1,0.7,0.4} },
-			strokeWidth = 4,
-			x = CentreX,
-			y = CentreY*2,
-		}
-	)
-	sceneGroup:insert(prevButton)
 	 
+
+				 
+		 local options = 
+		{
+			text = "This app is designed to encourage people to practice good hygiene procedures during the COVID-19 pandemic\nThere are 3 tutorials at the moment, hand washing, face mask and coughing etiquette.",
+			x = CentreX + 10,
+			y = CentreY,
+			width = ScreenWidth,
+			font = native.systemFont,   
+			fontSize = 26,
+			align = "left"  -- Alignment parameter
+		}
+		 
+		local mainText = display.newText( options )
+		mainText:setFillColor( 0, 0, 0 )
+		sceneGroup:insert(mainText)
+		
+		
+		
+		
+local agreeButton = widget.newButton(
+    {
+        label = "Agree",
+        onEvent = agree,
+        shape = "roundedRect",
+        width = 120,
+        height = 40,
+        cornerRadius = 2,
+        labelColor = { default={ 0, 0, 0 }},
+        fillColor = { default={0,1,0,1}, over={1,0.1,0.7,0.4} },
+        strokeWidth = 4,
+		x = CentreX/2,
+		y = CentreY*2,
+    }
+)
+sceneGroup:insert(agreeButton)
+
+local disagreeButton = widget.newButton(
+    {
+        label = "Disagree",
+        onEvent = disagree,
+        shape = "roundedRect",
+        width = 120,
+        height = 40,
+        cornerRadius = 2,
+        labelColor = { default={ 0, 0, 0 }},
+        fillColor = { default={1,0,0,1}, over={1,0.1,0.7,0.4} },
+        strokeWidth = 4,
+		x = CentreX*1.5,
+		y = CentreY*2,
+    }
+)
+sceneGroup:insert(disagreeButton)
+
+ 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
- 
-	
-	
- 
+
     end
 end
  

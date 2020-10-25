@@ -49,7 +49,7 @@ function scene:show( event )
 	local titleBar = display.newRect( CentreX, 10, ScreenWidth, 70 )
 	titleBar:setFillColor(0.561, 0.733,0.6,1)	sceneGroup:insert(titleBar)
 	
-	local titleText = display.newText( "Face mask quiz", CentreX, 10,  native.systemFont, 26 )
+	local titleText = display.newText( "Face mask quiz", CentreX, 10,  native.systemFont, 22 )
 	titleText:setFillColor( 0, 0, 0 )
 	sceneGroup:insert(titleText)
 	

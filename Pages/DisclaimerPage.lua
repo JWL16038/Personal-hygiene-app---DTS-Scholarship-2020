@@ -17,7 +17,7 @@ display.setDefault("background",1,1,1)
  
  
 local function agree(event)
-	composer.gotoScene( "Pages.Homepage",{effect="slideLeft"})
+	composer.gotoScene( "Pages.IntroPage",{effect="slideLeft"})
 end
 
 local function disagree()
